@@ -1,3 +1,0 @@
-This is a test upload file. Commit to local rep, then push to github, then delete locally, ocommit and push.
-And more stuff.
-
