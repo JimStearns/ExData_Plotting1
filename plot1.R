@@ -1,3 +1,7 @@
+# John Hopkins Data Science Coursera "Exploratory Data Analysis"
+# Submitted by Jim Stearns in satisfaction of course assignment.
+# File: plot1.R
+# Due Date: 7-Sep-2014
 
 setwd("~/GoogleDrive/Learning/Courses/CourseraDataScience/4_ExploratoryDataAnalysis/ProjectAssignments/C4W1Project/ExData_Plotting1")
 
@@ -34,7 +38,7 @@ createEnergySubsetOfInterest <- function(ensoi.fn) {
     # TODO: Use readlines() to filter input line by line rather than reading all into memory.
     # But I have enough memory, so this works ...
     enall.df <- read.csv(file.path(tempzipdir, "household_power_consumption.txt"),
-                           sep=";", na.strings="?", colClasses=energyColClasses)
+                         sep=";", na.strings="?", colClasses=energyColClasses)
     
     # Subset to a few days ...
     
@@ -47,14 +51,28 @@ createEnergySubsetOfInterest <- function(ensoi.fn) {
     # Combine the date and time information into a new DateTime column
     dates <- ensoi.df[,1]
     times <- ensoi.df[,2]
-    DateTime <- strptime(paste(dates, times), "%d/%m/%Y %H:%M:%S")
+    # Create a POSIX calendar time date/time column. Avoid as.Date() - doesn't handle time.
+    DateTime <- as.POSIXct(strptime(paste(dates, times), "%d/%m/%Y %H:%M:%S"))
     ensoi.dt.df <- cbind(DateTime, ensoi.df)
     write.csv(ensoi.dt.df, file=ensoi.fn)
 }
 
-doThePlot <- function() {
-    hist(ensoi.df$Global_active_power, col="red", xlab="Global Active Power (kilowatts)", 
-         main="Global Active Power", cex.axis=0.75)
+readTheEnergySubsetOfInterestFile <- function(ensoi.fn) {
+    # Two additional columns: a sequence number as first and a POSIXct date in second.
+    # Don't read in the sequence column, but do read in the date/time as POSIXct.
+    energySubsetOfInterestClasses=c(
+        "NULL", "POSIXct",
+        "character", "character", # date and time
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", "numeric"
+    )
+    ensoi.df = read.csv(ensoi.fn, colClasses=energySubsetOfInterestClasses)
+    return(ensoi.df)
+}
+
+doThePlot <- function(df) {
+    with(df, hist(Global_active_power, col="red", xlab="Global Active Power (kilowatts)", 
+         main="Global Active Power", cex.axis=0.75))
 }
 
 # Read in the Energy Sub-set of interest, creating from the full set of data if not already done.
@@ -62,11 +80,13 @@ ensoi.fn = "hh_power_subset.csv"
 if (!file.exists(ensoi.fn)) {
     createEnergySubsetOfInterest(ensoi.fn)
 }
-ensoi.df = read.csv(ensoi.fn)
+ensoi.df = readTheEnergySubsetOfInterestFile(ensoi.fn)
 
+# Plot to a 480x480 png file.
 png("plot1.png", width=480, height=480)
-doThePlot()
+doThePlot(ensoi.df)
 dev.off()
-# And a copy to the screen.
-doThePlot()
 
+# And just for grins, a copy to the screen.
+plot.new()
+doThePlot(ensoi.df)
