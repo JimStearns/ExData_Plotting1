@@ -71,6 +71,7 @@ readTheEnergySubsetOfInterestFile <- function(ensoi.fn) {
 }
 
 doThePlot <- function(df) {
+    par(mfrow=c(1,1))
     with(df, hist(Global_active_power, col="red", xlab="Global Active Power (kilowatts)", 
          main="Global Active Power", cex.axis=0.75))
 }

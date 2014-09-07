@@ -71,7 +71,7 @@ readTheEnergySubsetOfInterestFile <- function(ensoi.fn) {
 }
 
 doThePlot <- function(df) {
-    par(mar=c(5.1,4.1,4.1,2.1))
+    par(mfrow=c(1,1), mar=c(5.1,4.1,4.1,2.1))
     with(df, plot(DateTime, Global_active_power, type="n", 
          xlab="", ylab="Global Active Power (kilowatts)"))
     with (df, lines(DateTime, Global_active_power, lwd=1))

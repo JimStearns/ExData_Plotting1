@@ -71,7 +71,7 @@ readTheEnergySubsetOfInterestFile <- function(ensoi.fn) {
 }
 
 doThePlot <- function(df) {
-    par(mar=c(5.1,4.1,4.1,2.1))
+    par(mfrow=c(1,1), mar=c(5.1,4.1,4.1,2.1))
     with(df, plot(DateTime, Sub_metering_1, type="n", 
          xlab="", ylab="Energy sub metering"))
     with (df, lines(DateTime, Sub_metering_1, lwd=1, col="black"))
